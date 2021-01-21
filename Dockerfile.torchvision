@@ -1,0 +1,11 @@
+FROM heartexlabs/label-studio AS label-studio-torchvision
+
+RUN apt-get update -y \
+&&  apt-get install git -y \
+&&  apt-get install python3-opencv -y
+
+RUN pip install --upgrade pip
+
+# Cannot install https://github.com/heartexlabs/label-studio/blob/master/label_studio/ml/examples/mmdetection/requirements.txt
+# Need to install it separately
+RUN pip install torchvision==0.8.1

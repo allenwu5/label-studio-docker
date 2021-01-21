@@ -1,0 +1,12 @@
+FROM label-studio-torchvision AS label-studio-mmdetection
+
+# Cannot install https://github.com/heartexlabs/label-studio/blob/master/label_studio/ml/examples/mmdetection/requirements.txt
+# Need to install it separately
+RUN pip install mmcv-full==1.2.4
+
+# Cannot install mmdetection in /label-studio/label_studio/ml/examples/mmdetection/requirements.txt
+# Need to install it separately
+RUN git clone https://github.com/open-mmlab/mmdetection.git
+RUN cd mmdetection \
+&&  pip install -r requirements/build.txt \
+&&  pip install -v -e .
