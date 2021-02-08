@@ -9,3 +9,6 @@ RUN pip install --upgrade pip
 # Cannot install https://github.com/heartexlabs/label-studio/blob/master/label_studio/ml/examples/mmdetection/requirements.txt
 # Need to install it separately
 RUN pip install torchvision==0.8.1
+
+EXPOSE 8080
+EXPOSE 9090
