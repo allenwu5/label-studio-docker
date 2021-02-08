@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: label-studio-deployment
+spec:
+  selector:
+    matchLabels:
+      run: label-studio
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: label-studio
+    spec:
+      containers:
+      - name: label-studio-container
+        image: heartexlabs/label-studio
+        command: ["label-studio"]
+        args: ["start", "my_project", "--init"]
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /label-studio/my_project
+          name: my-project-dir
+        ports:
+        - containerPort: 8080
+
+      - name: label-studio-ml-yolov3-container
+        image: label-studio-yolov3
+        command: ["label-studio-ml"]
+        args: ["start", "coco-detector", "--with",
+                "config_file=/label-studio/mmdetection/configs/yolo/yolov3_d53_mstrain-608_273e_coco.py",
+                "checkpoint_file=/label-studio/checkpoints/yolov3_d53_mstrain-608_273e_coco-139f5633.pth",
+                "score_threshold=0.5", "device=gpu"]
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /label-studio/my_project 
+          name: my-project-dir
+        ports:
+        - containerPort: 9090
+      volumes:
+      - name: my-project-dir
+        hostPath:
+          # directory location on host
+          path: /project/n484-crowd-flow/label
+          # this field is optional
+          type: Directory
